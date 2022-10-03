@@ -214,7 +214,11 @@ public class FileUtils {
 			try {
 				while ((entry = Zin.getNextEntry()) != null
 						&& !entry.isDirectory()) {
-					Fout = new File(outPathString, entry.getName());
+        final File zipEntryFile = new File(outPathString, entry.getName());
+        if (!zipEntryFile.toPath().normalize().startsWith(outPathString)) {
+            throw new IOException("Bad zip entry");
+        }
+        Fout = zipEntryFile;
 					if (!Fout.exists()) {
 						(new File(Fout.getParent())).mkdirs();
 					}
